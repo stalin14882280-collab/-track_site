@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>+Track — Скачать приложение</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255,107,107,0.3); }
+            50% { box-shadow: 0 0 25px rgba(255,107,107,0.6); }
+            100% { box-shadow: 0 0 5px rgba(255,107,107,0.3); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* Логотип и заголовок */
+        .logo {
+            font-size: 64px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .tagline {
+            font-size: 20px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 48px;
+        }
+
+        /* Карточки с платформами */
+        .platforms {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .platform-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 40px 30px;
+            width: 280px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.15);
+            cursor: pointer;
+            animation: fadeInUp 0.6s ease;
+            animation-fill-mode: both;
+        }
+
+        .platform-card:nth-child(1) { animation-delay: 0.1s; }
+        .platform-card:nth-child(2) { animation-delay: 0.2s; }
+        .platform-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .platform-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.15);
+            border-color: #ff6b6b;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.3);
+        }
+
+        .platform-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .platform-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .platform-desc {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 30px;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255,107,107,0.4);
+        }
+
+        /* Текст о перенаправлении */
+        .info-text {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            border-left: 3px solid #ff6b6b;
+            text-align: left;
+        }
+
+        .info-text i {
+            color: #ff6b6b;
+            margin-right: 10px;
+        }
+
+        /* Футер */
+        .footer {
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 40px;
+        }
+
+        /* Модальное окно (пока нет файлов) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-content h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .modal-content p {
+            margin-bottom: 24px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .modal-btn {
+            background: #ff6b6b;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 24px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 48px; }
+            .tagline { font-size: 16px; }
+            .platform-card { width: 240px; padding: 30px 20px; }
+            .platform-icon { font-size: 48px; }
+            .platform-title { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎵 +TRACK</div>
+        <div class="tagline">Музыкальная платформа нового поколения</div>
+
+        <div class="platforms">
+            <!-- Windows -->
+            <div class="platform-card" data-platform="windows">
+                <div class="platform-icon">
+                    <i class="fab fa-windows"></i>
+                </div>
+                <div class="platform-title">Windows</div>
+                <div class="platform-desc">Для Windows 10/11<br>Версия 1.0</div>
+                <button class="download-btn windows-btn">
+                    <i class="fas fa-download"></i> Скачать
+                </button>
+            </div>
+
+            <!-- Android -->
+            <div class="platform-card" data-platform="android">
+                <div class="platform-icon">
+                    <i class="fab fa-android"></i>
+                </div>
+                <div class="platform-title">Android</div>
+                <div class="platform-desc">Для Android 8.0+<br>APK файл</div>
+                <button class="download-btn android-btn">
+                    <i class="fas fa-download"></i> Скачать
+                </button>
+            </div>
+
+            <!-- iPhone -->
+            <div class="platform-card" data-platform="ios">
+                <div class="platform-icon">
+                    <i class="fab fa-apple"></i>
+                </div>
+                <div class="platform-title">iPhone / iPad</div>
+                <div class="platform-desc">Для iOS 14+<br>Скоро</div>
+                <button class="download-btn ios-btn">
+                    <i class="fas fa-download"></i> Скачать
+                </button>
+            </div>
+        </div>
+
+        <div class="info-text">
+            <i class="fas fa-info-circle"></i> Все версии приложения ведут на один и тот же сайт — ваш аккаунт и музыка синхронизируются автоматически. Выберите свою платформу и начните слушать любимые треки!
+        </div>
+
+        <div class="footer">
+            © 2026 +Track · Все права защищены
+        </div>
+    </div>
+
+    <!-- Модальное окно (пока реальных файлов нет) -->
+    <div class="modal" id="redirectModal">
+        <div class="modal-content">
+            <i class="fas fa-globe" style="font-size: 48px; color: #ff6b6b; margin-bottom: 16px;"></i>
+            <h3>Переход на сайт</h3>
+            <p>Сейчас откроется музыкальный сервис +Track.<br>Вы будете перенаправлены на основную платформу.</p>
+            <button class="modal-btn" id="modalGoBtn">Перейти на сайт</button>
+            <button class="modal-btn" id="modalCloseBtn" style="background: transparent; margin-top: 12px;">Отмена</button>
+        </div>
+    </div>
+
+    <script>
+        // URL вашего сайта (HTTP)
+        const SITE_URL = 'http://a1249529.xsph.ru';
+        
+        // Модальное окно
+        const modal = document.getElementById('redirectModal');
+        const goBtn = document.getElementById('modalGoBtn');
+        const closeBtn = document.getElementById('modalCloseBtn');
+        
+        let pendingPlatform = null;
+
+        function showModal(platform) {
+            pendingPlatform = platform;
+            modal.classList.add('active');
+        }
+
+        function redirectToSite() {
+            window.open(SITE_URL, '_blank');
+            modal.classList.remove('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            pendingPlatform = null;
+        }
+
+        // Обработчики кнопок
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.platform-card');
+                const platform = card.getAttribute('data-platform');
+                showModal(platform);
+            });
+        });
+
+        // События модалки
+        goBtn.addEventListener('click', redirectToSite);
+        closeBtn.addEventListener('click', closeModal);
+
+        // Закрытие по клику вне окна
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    </script>
+</body>
+</html>
